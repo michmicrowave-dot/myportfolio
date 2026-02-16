@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Dev Portfolio | Zent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-dark: #02040a;
+            --accent: #ff2d2d;
+            --accent-glow: rgba(255, 45, 45, 0.4);
+            --glass: rgba(10, 12, 20, 0.9);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            overflow-x: hidden;
+            perspective: 2000px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Cyber Grid Floor */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255, 45, 45, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 45, 45, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            transform: rotateX(70deg) scale(2.5) translateY(-10%);
+            transform-origin: top;
+            z-index: -1;
+            mask-image: radial-gradient(circle at center, black 20%, transparent 90%);
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 60px; }
+        }
+
+        .aurora {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vh;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: -1;
+            animation: moveAurora 20s infinite alternate;
+        }
+
+        @keyframes moveAurora {
+            from { transform: translate(0, 0); }
+            to { transform: translate(20%, 20%); }
+        }
+
+        .main-container {
+            border: 1px solid var(--border);
+            background: var(--glass);
+            backdrop-filter: blur(40px);
+            border-radius: 40px;
+            box-shadow: 0 100px 200px -50px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 10;
+            width: 95%;
+            max-width: 1150px;
+            margin: 2rem auto;
+            overflow: hidden;
+        }
+
+        .profile-prism {
+            position: relative;
+            padding: 4px;
+            background: linear-gradient(135deg, var(--accent), #ff7b00);
+            border-radius: 36px;
+            box-shadow: 0 0 30px var(--accent-glow);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .profile-prism:hover {
+            transform: scale(1.02) rotate(-1deg);
+            box-shadow: 0 0 50px var(--accent-glow);
+        }
+
+        .text-header {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(to bottom, #fff 30%, #999 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .skill-node {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 28px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-node::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+            transition: 0.5s;
+        }
+
+        .skill-node:hover::before {
+            left: 100%;
+        }
+
+        .skill-node:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(10px);
+        }
+
+        .skill-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 2px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .status-badge {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            color: #888;
+            letter-spacing: 0.05em;
+        }
+
+        .social-link {
+            transition: all 0.3s ease;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .social-link:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .parallax-wrap {
+            transition: transform 0.1s ease-out;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container { margin: 1rem; padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-bg"></div>
+    <div class="aurora"></div>
+
+    <main class="main-container p-8 md:p-16 lg:p-20 grid lg:grid-cols-12 gap-12 lg:gap-20 items-center parallax-wrap" id="parallax-card">
+        
+        <!-- Section: Identity -->
+        <section class="lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-left">
+            <div class="profile-prism mb-10">
+                <div class="w-48 h-48 md:w-60 md:h-60 rounded-[32px] overflow-hidden border-[6px] border-[#02040a]">
+                    <img src="profile.png" alt="Profile" onerror="this.src='https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=500&auto=format&fit=crop'" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700">
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="flex items-center gap-3 justify-center lg:justify-start">
+                    <span class="status-badge">STABLE_V9.0</span>
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                    </span>
+                </div>
+
+                <div>
+                    <h1 class="text-5xl md:text-6xl font-black text-header italic uppercase leading-none mb-2">zent</h1>
+                    <p class="text-red-500 font-bold tracking-[0.6em] text-[10px] md:text-[12px] uppercase">A Mid ROBLOX Scripter</p>
+                </div>
+
+                <p class="text-slate-400 text-sm md:text-base leading-relaxed max-w-sm font-medium">
+                    hi i code and make idk
+                </p>
+
+                <div class="flex gap-6 pt-6 justify-center lg:justify-start">
+                    <a href="#" class="social-link text-2xl" title="Discord"><i class="fab fa-discord"></i></a>
+                    <a href="#" class="social-link text-2xl" title="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Content -->
+        <section class="lg:col-span-7 flex flex-col gap-5">
+            
+            <!-- Builder -->
+            <div class="skill-node group">
+                <div class="flex items-center gap-6">
+                    <div class="w-12 h-12 flex items-center justify-center bg-orange-500/10 rounded-2xl text-orange-500 text-xl group-hover:bg-orange-500 group-hover:text-white transition-all duration-500">
+                        <i class="fas fa-hammer"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-end mb-1">
+                            <h3 class="text-lg font-bold uppercase tracking-tighter italic">Good Roblox map builder</h3>
+                            <span class="text-[10px] font-mono text-slate-500">85%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest">i make and design decent to good roblox maps</p>
+                        <div class="skill-bar">
+                            <div class="skill-progress bg-orange-500" data-width="85%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scripter -->
+            <div class="skill-node group">
+                <div class="flex items-center gap-6">
+                    <div class="w-12 h-12 flex items-center justify-center bg-blue-500/10 rounded-2xl text-blue-500 text-xl group-hover:bg-blue-500 group-hover:text-white transition-all duration-500">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-end mb-1">
+                            <h3 class="text-lg font-bold uppercase tracking-tighter italic">Good Lua Scripter</h3>
+                            <span class="text-[10px] font-mono text-slate-500">75%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest">Can script you anything you desire</p>
+                        <div class="skill-bar">
+                            <div class="skill-progress bg-blue-500" data-width="75%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UI Maker -->
+            <div class="skill-node group">
+                <div class="flex items-center gap-6">
+                    <div class="w-12 h-12 flex items-center justify-center bg-red-500/10 rounded-2xl text-red-500 text-xl group-hover:bg-red-500 group-hover:text-white transition-all duration-500">
+                        <i class="fas fa-bezier-curve"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-end mb-1">
+                            <h3 class="text-lg font-bold uppercase tracking-tighter italic">UX Designer</h3>
+                            <span class="text-[10px] font-mono text-slate-500">60%</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest">good ui designer yes</p>
+                        <div class="skill-bar">
+                            <div class="skill-progress bg-red-500" data-width="60%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-6 border-t border-white/5 flex justify-between items-center">
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Side Decoration -->
+    <div class="fixed right-10 bottom-10 hidden xl:block opacity-20">
+        <div class="flex flex-col gap-2 items-end">
+            <div class="h-1 w-20 bg-white/20 rounded-full"></div>
+            <div class="h-1 w-12 bg-red-500 rounded-full"></div>
+            <div class="h-1 w-16 bg-white/20 rounded-full"></div>
+        </div>
+    </div>
+
+    <script>
+        const card = document.getElementById('parallax-card');
+        const progresses = document.querySelectorAll('.skill-progress');
+        
+        // Parallax Effect
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 80;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 80;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // Skill Bar Animation on Load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                progresses.forEach(p => {
+                    p.style.width = p.getAttribute('data-width');
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
