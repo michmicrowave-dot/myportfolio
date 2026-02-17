@@ -3,316 +3,616 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Dev Portfolio | Zent</title>
+    <title>The Dungeons | Shitty DS Server</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@100..900&family=JetBrains+Mono:wght@800&display=swap');
 
         :root {
-            --bg-dark: #02040a;
-            --accent: #ff2d2d;
-            --accent-glow: rgba(255, 45, 45, 0.4);
-            --glass: rgba(10, 12, 20, 0.9);
-            --border: rgba(255, 255, 255, 0.08);
+            --discord-blurple: #5865F2;
+            --discord-black: #020203;
+            --accent-primary: #5865F2;
+            --accent-secondary: #9b4dff;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --success-green: #23a55a;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-dark);
-            color: #ffffff;
+            background-color: var(--discord-black);
+            color: #DBDEE1;
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
             overflow-x: hidden;
             perspective: 2000px;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        /* Cyber Grid Floor */
-        .grid-bg {
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Scanline Overlay */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(88, 101, 242, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            z-index: 100;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* Animated Aura Background */
+        .aura-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 50% 50%, #0a0a0c 0%, #020203 100%);
+        }
+
+        .aura-circle {
+            position: fixed;
+            width: 80vw;
+            height: 80vw;
+            background: radial-gradient(circle, rgba(88, 101, 242, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(80px);
+            pointer-events: none;
+            transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Particle System */
+        .particles-container {
             position: fixed;
             inset: 0;
-            background-image: 
-                linear-gradient(rgba(255, 45, 45, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 45, 45, 0.05) 1px, transparent 1px);
-            background-size: 60px 60px;
-            transform: rotateX(70deg) scale(2.5) translateY(-10%);
-            transform-origin: top;
             z-index: -1;
-            mask-image: radial-gradient(circle at center, black 20%, transparent 90%);
-            animation: gridMove 20s linear infinite;
+            pointer-events: none;
         }
 
-        @keyframes gridMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 60px; }
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(1px);
+            animation: float-around var(--duration) infinite linear;
         }
 
-        .aurora {
+        .shard {
+            position: absolute;
+            background: rgba(88, 101, 242, 0.2);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            animation: float-around var(--duration) infinite ease-in-out;
+            filter: blur(2px);
+        }
+
+        @keyframes float-around {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.2; }
+            90% { opacity: 0.2; }
+            100% { transform: translateY(-200px) translateX(100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Enhanced Grid System */
+        .bg-grid {
             position: fixed;
-            top: -10%;
-            left: -10%;
-            width: 50vw;
-            height: 50vh;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            filter: blur(120px);
-            opacity: 0.15;
+            inset: 0;
             z-index: -1;
-            animation: moveAurora 20s infinite alternate;
+            background-image: 
+                linear-gradient(rgba(88, 101, 242, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(88, 101, 242, 0.07) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(circle at center, black, transparent 95%);
+            opacity: 0.6;
         }
 
-        @keyframes moveAurora {
-            from { transform: translate(0, 0); }
-            to { transform: translate(20%, 20%); }
+        .bg-grid-sub {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(88, 101, 242, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(88, 101, 242, 0.03) 1px, transparent 1px);
+            background-size: 15px 15px;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+            opacity: 0.3;
         }
 
         .main-container {
-            border: 1px solid var(--border);
-            background: var(--glass);
-            backdrop-filter: blur(40px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .hero-viewport {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+        }
+
+        /* Premium Invite Card */
+        .invite-card {
+            background: rgba(13, 13, 15, 0.8);
+            width: 100%;
+            max-width: 460px;
             border-radius: 40px;
-            box-shadow: 0 100px 200px -50px rgba(0,0,0,0.8);
-            position: relative;
-            z-index: 10;
-            width: 95%;
-            max-width: 1150px;
-            margin: 2rem auto;
+            box-shadow: 0 40px 100px -30px rgba(0,0,0,0.9), 0 0 50px rgba(88, 101, 242, 0.1);
             overflow: hidden;
-        }
-
-        .profile-prism {
             position: relative;
-            padding: 4px;
-            background: linear-gradient(135deg, var(--accent), #ff7b00);
-            border-radius: 36px;
-            box-shadow: 0 0 30px var(--accent-glow);
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-style: preserve-3d;
+            transition: transform 0.2s ease-out;
+            backdrop-filter: blur(40px) saturate(200%);
+            border: 1px solid var(--glass-border);
         }
 
-        .profile-prism:hover {
-            transform: scale(1.02) rotate(-1deg);
-            box-shadow: 0 0 50px var(--accent-glow);
+        .server-banner {
+            width: 100%;
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            background-image: url('https://images.unsplash.com/photo-1614850523296-e8110993152e?q=80&w=1000&auto=format&fit=crop');
+            transition: transform 0.5s ease;
         }
 
-        .text-header {
-            font-family: 'Space Grotesk', sans-serif;
-            background: linear-gradient(to bottom, #fff 30%, #999 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .invite-card:hover .server-banner {
+            transform: scale(1.1);
         }
 
-        .skill-node {
-            background: rgba(255, 255, 255, 0.015);
-            border: 1px solid var(--border);
-            padding: 24px;
-            border-radius: 28px;
+        .server-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(2, 2, 3, 1) 100%);
+        }
+
+        .card-content {
+            padding: 40px;
+            padding-top: 50px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .server-icon-container {
+            position: absolute;
+            top: -65px;
+            left: 40px;
+            padding: 6px;
+            background: #0d0d0f;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .server-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            font-weight: 900;
+            color: white;
+            background-size: cover;
+            background-position: center;
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        /* Bento Meta UI */
+        .meta-container {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .meta-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px;
+            border-radius: 20px;
             transition: all 0.4s ease;
+        }
+
+        .meta-box:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(88, 101, 242, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .meta-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #80848e;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-green);
+            box-shadow: 0 0 10px var(--success-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        .meta-value {
+            color: white;
+            font-size: 26px;
+            font-weight: 800;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.03em;
+        }
+
+        /* Ultra Join Button */
+        .btn-join {
+            background: #fff;
+            color: #000;
+            width: 100%;
+            padding: 22px;
+            border-radius: 24px;
+            font-weight: 900;
+            font-size: 15px;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 32px;
+            cursor: pointer;
+            box-shadow: 0 20px 40px rgba(255,255,255,0.1);
             position: relative;
             overflow: hidden;
         }
 
-        .skill-node::before {
+        .btn-join::after {
             content: '';
             position: absolute;
             top: 0; left: -100%;
             width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
             transition: 0.5s;
         }
 
-        .skill-node:hover::before {
+        .btn-join:hover::after {
             left: 100%;
         }
 
-        .skill-node:hover {
-            background: rgba(255, 255, 255, 0.03);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateX(10px);
+        .btn-join:hover {
+            background: var(--discord-blurple);
+            color: white;
+            transform: scale(1.03) translateY(-2px);
+            box-shadow: 0 25px 50px rgba(88, 101, 242, 0.4);
         }
 
-        .skill-bar {
-            height: 4px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 2px;
-            margin-top: 12px;
+        /* Gallery Overhaul */
+        .gallery-section {
+            width: 100%;
+            max-width: 1300px;
+            padding: 150px 0;
+            position: relative;
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 32px;
+            padding: 20px;
+            align-items: start;
+        }
+
+        .gallery-item {
+            position: relative;
+            background: #0d0d0f;
+            border-radius: 28px;
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: default;
         }
 
-        .skill-progress {
-            height: 100%;
-            border-radius: 2px;
-            width: 0%;
-            transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, var(--accent-primary), transparent);
+            opacity: 0;
+            transition: 0.5s;
+            z-index: 1;
         }
 
-        .status-badge {
+        .gallery-item:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        }
+
+        .gallery-item:hover::before {
+            opacity: 0.1;
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(40%);
+            transition: 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .gallery-item:hover .gallery-img {
+            filter: grayscale(0%);
+            transform: scale(1.1);
+        }
+
+        /* Missing image placeholder tile */
+        .gallery-missing {
+            width: 100%;
+            aspect-ratio: 3/4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            background: repeating-linear-gradient(
+                -45deg,
+                rgba(88, 101, 242, 0.03),
+                rgba(88, 101, 242, 0.03) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .gallery-missing i {
+            font-size: 28px;
+            color: rgba(88, 101, 242, 0.4);
+        }
+
+        .gallery-missing span {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.15);
+        }
+
+        .gallery-missing code {
             font-family: 'JetBrains Mono', monospace;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px 12px;
-            border-radius: 8px;
             font-size: 10px;
-            color: #888;
-            letter-spacing: 0.05em;
+            color: rgba(88, 101, 242, 0.5);
+            background: rgba(88, 101, 242, 0.06);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(88, 101, 242, 0.15);
         }
 
-        .social-link {
-            transition: all 0.3s ease;
-            color: rgba(255,255,255,0.4);
-        }
-
-        .social-link:hover {
-            color: var(--accent);
-            transform: translateY(-3px);
-        }
-
-        .parallax-wrap {
-            transition: transform 0.1s ease-out;
-        }
-
-        @media (max-width: 1024px) {
-            .main-container { margin: 1rem; padding: 2rem; }
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="aura-bg"></div>
+    <div id="aura" class="aura-circle"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-grid-sub"></div>
+    <div id="particles" class="particles-container"></div>
 
-    <div class="grid-bg"></div>
-    <div class="aurora"></div>
-
-    <main class="main-container p-8 md:p-16 lg:p-20 grid lg:grid-cols-12 gap-12 lg:gap-20 items-center parallax-wrap" id="parallax-card">
-        
-        <!-- Section: Identity -->
-        <section class="lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <div class="profile-prism mb-10">
-                <div class="w-48 h-48 md:w-60 md:h-60 rounded-[32px] overflow-hidden border-[6px] border-[#02040a] bg-[#0a0a0a]">
-                    <!-- Updated to use the image you provided -->
-                    <img src="ee.png" 
-                         alt="Zent Profile" 
-                         onerror="this.src='https://images.unsplash.com/photo-1614728263952-84ea206f25ae?q=80&w=500&auto=format&fit=crop'" 
-                         class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700">
-                </div>
-            </div>
-
-            <div class="space-y-6">
-                <div class="flex items-center gap-3 justify-center lg:justify-start">
-                    <span class="status-badge">STABLE_V9.0</span>
-                    <span class="flex h-2 w-2 relative">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                    </span>
-                </div>
-
-                <div>
-                    <h1 class="text-5xl md:text-6xl font-black text-header italic uppercase leading-none mb-2">zent</h1>
-                    <p class="text-red-500 font-bold tracking-[0.6em] text-[10px] md:text-[12px] uppercase">A Mid ROBLOX Scripter</p>
-                </div>
-
-                <p class="text-slate-400 text-sm md:text-base leading-relaxed max-w-sm font-medium">
-                    hi i code and make idk
-                </p>
-
-                <div class="flex gap-6 pt-6 justify-center lg:justify-start">
-                    <a href="#" class="social-link text-2xl" title="Discord"><i class="fab fa-discord"></i></a>
-                    <a href="#" class="social-link text-2xl" title="Instagram"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section: Content -->
-        <section class="lg:col-span-7 flex flex-col gap-5">
-            
-            <!-- Builder -->
-            <div class="skill-node group">
-                <div class="flex items-center gap-6">
-                    <div class="w-12 h-12 flex items-center justify-center bg-orange-500/10 rounded-2xl text-orange-500 text-xl group-hover:bg-orange-500 group-hover:text-white transition-all duration-500">
-                        <i class="fas fa-hammer"></i>
+    <div class="main-container">
+        <!-- Hero Section -->
+        <div class="hero-viewport">
+            <div class="invite-card" id="card">
+                <div id="banner" class="server-banner"></div>
+                
+                <div class="card-content">
+                    <div class="server-icon-container">
+                        <div id="icon" class="server-icon">?</div>
                     </div>
-                    <div class="flex-grow">
-                        <div class="flex justify-between items-end mb-1">
-                            <h3 class="text-lg font-bold uppercase tracking-tighter italic">Good Roblox map builder</h3>
-                            <span class="text-[10px] font-mono text-slate-500">85%</span>
+
+                    <div class="text-left">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="bg-white/5 border border-white/10 px-2 py-0.5 rounded text-[9px] font-bold text-white/50 tracking-widest uppercase">Verified Nexus Node</span>
                         </div>
-                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest">i make and design decent to good roblox maps</p>
-                        <div class="skill-bar">
-                            <div class="skill-progress bg-orange-500" data-width="85%"></div>
+                        <h1 id="server-name" class="text-white text-5xl font-black tracking-tighter mb-3">Nexus</h1>
+                        <p id="server-desc" class="text-[#949ba4] text-base font-medium leading-relaxed opacity-80 mb-8">Synchronizing with Discord gateway...</p>
+
+                        <div class="meta-container">
+                            <div class="meta-box">
+                                <span class="meta-label">
+                                    <div class="status-pulse"></div> Online
+                                </span>
+                                <span id="online-count" class="meta-value">--</span>
+                            </div>
+                            <div class="meta-box">
+                                <span class="meta-label">
+                                    <i class="fas fa-users-rays text-[#80848e]"></i> Members
+                                </span>
+                                <span id="member-count" class="meta-value">--</span>
+                            </div>
                         </div>
+
+                        <button id="join-btn" class="btn-join">
+                            <i class="fab fa-discord text-xl"></i>
+                            <span class="uppercase">Join the dungeons</span>
+                        </button>
                     </div>
                 </div>
             </div>
-
-            <!-- Scripter -->
-            <div class="skill-node group">
-                <div class="flex items-center gap-6">
-                    <div class="w-12 h-12 flex items-center justify-center bg-blue-500/10 rounded-2xl text-blue-500 text-xl group-hover:bg-blue-500 group-hover:text-white transition-all duration-500">
-                        <i class="fas fa-terminal"></i>
-                    </div>
-                    <div class="flex-grow">
-                        <div class="flex justify-between items-end mb-1">
-                            <h3 class="text-lg font-bold uppercase tracking-tighter italic">Good Lua Scripter</h3>
-                            <span class="text-[10px] font-mono text-slate-500">75%</span>
-                        </div>
-                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest">Can script you anything you desire</p>
-                        <div class="skill-bar">
-                            <div class="skill-progress bg-blue-500" data-width="75%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- UI Maker -->
-            <div class="skill-node group">
-                <div class="flex items-center gap-6">
-                    <div class="w-12 h-12 flex items-center justify-center bg-red-500/10 rounded-2xl text-red-500 text-xl group-hover:bg-red-500 group-hover:text-white transition-all duration-500">
-                        <i class="fas fa-bezier-curve"></i>
-                    </div>
-                    <div class="flex-grow">
-                        <div class="flex justify-between items-end mb-1">
-                            <h3 class="text-lg font-bold uppercase tracking-tighter italic">UX Designer</h3>
-                            <span class="text-[10px] font-mono text-slate-500">60%</span>
-                        </div>
-                        <p class="text-[10px] text-slate-500 uppercase font-black tracking-widest">good ui designer yes</p>
-                        <div class="skill-bar">
-                            <div class="skill-progress bg-red-500" data-width="60%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-4 pt-6 border-t border-white/5 flex justify-between items-center">
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Side Decoration -->
-    <div class="fixed right-10 bottom-10 hidden xl:block opacity-20">
-        <div class="flex flex-col gap-2 items-end">
-            <div class="h-1 w-20 bg-white/20 rounded-full"></div>
-            <div class="h-1 w-12 bg-red-500 rounded-full"></div>
-            <div class="h-1 w-16 bg-white/20 rounded-full"></div>
         </div>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section">
+            <div class="gallery-header">
+                <h2 class="text-white text-5xl font-black tracking-tighter mb-4">What the fuck is ts</h2>
+                <p class="text-[#80848e] text-lg max-w-lg mx-auto">Uh here's some weird stuff from the server because they deserve being put here damn slaves</p>
+            </div>
+            
+            <div class="gallery-grid" id="gallery-container">
+                <!-- Gallery items rendered by script below -->
+            </div>
+        </section>
+
+        <footer class="py-32 text-center opacity-40">
+            <p class="text-[10px] font-bold tracking-[0.5em] uppercase text-white mb-4">End of Transmission</p>
+            <div class="h-[1px] w-20 bg-white/10 mx-auto"></div>
+        </footer>
     </div>
 
     <script>
-        const card = document.getElementById('parallax-card');
-        const progresses = document.querySelectorAll('.skill-progress');
-        
-        // Parallax Effect
+        const inviteCode = 'Qu4VD9c4'; 
+        const card = document.getElementById('card');
+        const aura = document.getElementById('aura');
+
+        // Resolve image path relative to the HTML file's location.
+        // Works on GitHub Pages whether the site is at the root or in a subdirectory.
+        function resolveImagePath(filename) {
+            // Get the directory of the current HTML file
+            const base = window.location.href.replace(/\/[^/]*$/, '/');
+            return base + filename;
+        }
+
+        // Render Background Particles & Shards
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 25;
+        for(let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            const isShard = Math.random() > 0.7;
+            particle.className = isShard ? 'shard' : 'particle';
+            
+            const size = isShard ? (Math.random() * 20 + 10) : (Math.random() * 4 + 2);
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            const duration = Math.random() * 15 + 10;
+            const delay = Math.random() * -20;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${posX}%`;
+            particle.style.top = `${posY}%`;
+            particle.style.setProperty('--duration', `${duration}s`);
+            particle.style.animationDelay = `${delay}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+
+        // Render Gallery
+        const container = document.getElementById('gallery-container');
+        for(let i = 1; i <= 12; i++) {
+            const filename = `funny${i}.png`;
+            const src = resolveImagePath(filename);
+
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = `Artifact ${i}`;
+            img.className = 'gallery-img';
+            img.loading = 'lazy';
+
+            img.onerror = function() {
+                // Replace broken img with a styled "missing" tile
+                this.parentElement.innerHTML = `
+                    <div class="gallery-missing">
+                        <i class="fas fa-image-slash"></i>
+                        <span>Missing artifact</span>
+                        <code>${filename}</code>
+                    </div>
+                `;
+            };
+
+            item.appendChild(img);
+            container.appendChild(item);
+        }
+
+        // Dynamic Aura & Card Movement
         document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 80;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 80;
-            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            aura.style.transform = `translate(${x - window.innerWidth/2}px, ${y - window.innerHeight/2}px)`;
+
+            if (card) {
+                const rect = card.getBoundingClientRect();
+                const cardX = x - rect.left;
+                const cardY = y - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (cardY - centerY) / 20;
+                const rotateY = (centerX - cardX) / 20;
+                
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            }
         });
 
-        // Skill Bar Animation on Load
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                progresses.forEach(p => {
-                    p.style.width = p.getAttribute('data-width');
-                });
-            }, 500);
+        document.addEventListener('mouseleave', () => {
+            if (card) card.style.transform = `rotateX(0deg) rotateY(0deg)`;
         });
+
+        async function fetchInviteInfo() {
+            try {
+                const response = await fetch(`https://discord.com/api/v9/invites/${inviteCode}?with_counts=true`);
+                const data = await response.json();
+
+                if (data.guild) {
+                    const guild = data.guild;
+                    document.getElementById('server-name').innerText = guild.name;
+                    document.getElementById('online-count').innerText = (data.approximate_presence_count || 0).toLocaleString();
+                    document.getElementById('member-count').innerText = (data.approximate_member_count || 0).toLocaleString();
+                    document.getElementById('server-desc').innerText = guild.description || "The core is stable. Access granted to all verified units.";
+
+                    if (guild.icon) {
+                        const iconUrl = `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp?size=256`;
+                        const iconDiv = document.getElementById('icon');
+                        iconDiv.style.backgroundImage = `url(${iconUrl})`;
+                        iconDiv.innerText = '';
+                    }
+
+                    if (guild.banner) {
+                        const bannerUrl = `https://cdn.discordapp.com/banners/${guild.id}/${guild.banner}.webp?size=1024`;
+                        document.getElementById('banner').style.backgroundImage = `url(${bannerUrl})`;
+                    }
+                }
+
+                document.getElementById('join-btn').onclick = () => window.open(`https://discord.com/invite/${inviteCode}`, '_blank');
+            } catch (error) {
+                document.getElementById('server-name').innerText = "Nexus";
+            }
+        }
+
+        fetchInviteInfo();
     </script>
 </body>
 </html>
